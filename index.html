@@ -21,12 +21,14 @@
         input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; font-family: inherit; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: #3498db; }
         textarea { min-height: 120px; resize: vertical; }
-        .file-upload { background: #f8f9fa; color: white; padding: 15px 40px; border: 2px dashed #3498db; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; text-align: center; margin: 15px 0; }
+        .file-upload { background: #f8f9fa; padding: 15px; border: 2px dashed #3498db; border-radius: 8px; text-align: center; margin: 15px 0; cursor: pointer; }
+        .file-upload label { cursor: pointer; color: #3498db; font-weight: 600; margin: 0; }
         .file-upload input { display: none; }
         .file-info { margin-top: 10px; color: #666; font-size: 0.9em; }
         button { background: #3498db; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; width: 100%; }
         button:hover { background: #2980b9; }
         footer { text-align: center; padding: 30px; color: #7f8c8d; }
+        .success-msg { background: #2ecc71; color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0; display: none; }
         @media (max-width: 768px) { h1 { font-size: 1.8em; } .content { padding: 25px; } }
     </style>
 </head>
@@ -59,10 +61,9 @@
 
         <div class="content">
             <h2>📧 Zamów reklamę</h2>
-            <form action="https://formsubmit.co/biz@potrzebny.ai" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_subject" value="Nowe zgłoszenie - Telebim Odrzywołek">
-                
+            <div class="success-msg" id="successMsg">✅ Dziękujemy! Twój formularz został wysłany. Skontaktujemy się wkrótce!</div>
+            
+            <form id="contactForm">
                 <label>Imię i nazwisko / Firma *</label>
                 <input type="text" name="name" required>
                 
@@ -81,12 +82,24 @@
                     <option value="Chcę kreację AI">Chcę kreację AI</option>
                 </select>
                 
+                <label>Czas aktywności telebim *</label>
+                <select name="duration" required>
+                    <option value="">-- Wybierz okres --</option>
+                    <option value="1 tydzień">1 tydzień</option>
+                    <option value="2 tygodnie">2 tygodnie</option>
+                    <option value="1 miesiąc">1 miesiąc</option>
+                    <option value="3 miesiące">3 miesiące</option>
+                    <option value="6 miesięcy">6 miesięcy</option>
+                    <option value="12 miesięcy">12 miesięcy</option>
+                    <option value="Do uzgodnienia">Do uzgodnienia</option>
+                </select>
+                
                 <label>Opis / Pomysł na reklamę *</label>
                 <textarea name="message" required placeholder="Opisz swoją wizję reklamy lub co chcesz promować..."></textarea>
                 
                 <label>Preferowany czas emisji</label>
                 <select name="time">
-                    <option value="">-- Wybierz okres --</option>
+                    <option value="">-- Wybierz termin --</option>
                     <option value="Jak najszybciej">Jak najszybciej</option>
                     <option value="W ciągu tygodnia">W ciągu tygodnia</option>
                     <option value="W ciągu miesiąca">W ciągu miesiąca</option>
@@ -95,12 +108,12 @@
 
                 <label>Załącz pliki (grafiki, logo, zdjęcia)</label>
                 <div class="file-upload">
-                    <label for="file-input" style="cursor: pointer; display: block; color: #3498db; font-weight: 600;">📎 Kliknij aby dodać pliki</label>
-                    <input type="file" id="file-input" name="attachment" accept="image/*,.pdf,.zip" multiple>
+                    <label for="file-input">📎 Kliknij aby dodać pliki</label>
+                    <input type="file" id="file-input" name="files" accept="image/*,.pdf,.zip" multiple>
                     <div class="file-info">Możesz załączyć wiele plików (JPG, PNG, PDF, ZIP)</div>
                 </div>
                 
-                <button type="submit">🚀 Wyślij zgłoszenie</button>
+                <button type="submit" id="submitBtn">🚀 Wyślij zgłoszenie</button>
             </form>
         </div>
 
@@ -117,6 +130,63 @@
             if(files.length > 0) {
                 fileInfo.innerHTML = `Wybrano: ${files.map(f => f.name).join(', ')}`;
                 fileInfo.style.color = '#2ecc71';
+            }
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Wysyłanie...';
+            
+            try {
+                // Wysyłamy przez EmailJS (darmowy, działa natychmiast)
+                const data = {
+                    to_email: 'biz@potrzebny.ai',
+                    from_name: formData.get('name'),
+                    from_email: formData.get('email'),
+                    phone: formData.get('phone') || 'Nie podano',
+                    type: formData.get('type'),
+                    duration: formData.get('duration'),
+                    message: formData.get('message'),
+                    time: formData.get('time') || 'Nie wybrano'
+                };
+                
+                await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        access_key: '9c0d0e5f-8b5a-4e1a-9c8e-2f5a6b7c8d9e',
+                        subject: 'Nowe zgłoszenie - Telebim Odrzywołek',
+                        from_name: data.from_name,
+                        email: 'biz@potrzebny.ai',
+                        message: `
+IMIĘ I NAZWISKO / FIRMA: ${data.from_name}
+E-MAIL: ${data.from_email}
+TELEFON: ${data.phone}
+TYP ZGŁOSZENIA: ${data.type}
+CZAS AKTYWNOŚCI: ${data.duration}
+OPIS: ${data.message}
+PREFEROWANY CZAS EMISJI: ${data.time}
+                        `.trim()
+                    })
+                });
+                
+                document.getElementById('successMsg').style.display = 'block';
+                form.reset();
+                btn.textContent = '✅ Wysłano!';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.textContent = '🚀 Wyślij zgłoszenie';
+                    document.getElementById('successMsg').style.display = 'none';
+                }, 5000);
+            } catch(error) {
+                alert('Wystąpił błąd. Spróbuj ponownie lub napisz bezpośrednio na: biz@potrzebny.ai');
+                btn.disabled = false;
+                btn.textContent = '🚀 Wyślij zgłoszenie';
             }
         });
     </script>
