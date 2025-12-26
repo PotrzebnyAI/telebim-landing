@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telebim Odrywołek - Reklama przy S7</title>
+    <title>Telebim Odrzywołek - Reklama przy S7</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
@@ -21,7 +21,10 @@
         input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; font-family: inherit; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: #3498db; }
         textarea { min-height: 120px; resize: vertical; }
-        button { background: #3498db; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; width: 100%; margin-top: 20px; }
+        .file-upload { background: #f8f9fa; color: white; padding: 15px 40px; border: 2px dashed #3498db; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; text-align: center; margin: 15px 0; }
+        .file-upload input { display: none; }
+        .file-info { margin-top: 10px; color: #666; font-size: 0.9em; }
+        button { background: #3498db; color: white; padding: 15px 40px; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; width: 100%; }
         button:hover { background: #2980b9; }
         footer { text-align: center; padding: 30px; color: #7f8c8d; }
         @media (max-width: 768px) { h1 { font-size: 1.8em; } .content { padding: 25px; } }
@@ -30,73 +33,92 @@
 <body>
     <div class="container">
         <header>
-            <h1>📡 Telebim Odrywołek</h1>
+            <h1>📡 Telebim Odrzywołek</h1>
             <p class="subtitle">Profesjonalna reklama LED przy drodze ekspresowej S7</p>
-            <span class="location">📍 Odrywołek | Belsk - Grójec</span>
+            <span class="location">📍 Odrzywołek | Belsk - Grójec</span>
         </header>
 
         <div class="content">
             <h2>Dlaczego nasz telebim?</h2>
+            
             <div class="info-box">
                 <strong>🚗 Strategiczna lokalizacja</strong>
-                Przy ruchliwej trasie S7, miejscowość Odrywołek, pomiędzy Belskiem a Grójcem. Tysiące potencjalnych klientów dziennie!
+                Przy ruchliwej trasie S7, miejscowość Odrzywołek, pomiędzy Belskiem a Grójcem. Tysiące potencjalnych klientów dziennie!
             </div>
+
             <div class="info-box">
                 <strong>✨ Wysoka jakość</strong>
                 Nowoczesny wyświetlacz LED Full HD zapewnia doskonałą widoczność w dzień i w nocy.
             </div>
+
             <div class="info-box">
                 <strong>🎨 Kreacja AI</strong>
-                Wystarczy opisać pomysł lub przesłać materiały - profesjonalną grafikę stworzymy za Ciebie z pomocą AI!
+                Wystarczy opisać pomysł lub przesłać materiały - profesjonalną grafikę lub film stworzymy za Ciebie z pomocą AI!
             </div>
         </div>
 
         <div class="content">
-            <h2>📩 Zamów reklamę</h2>
-            <form action="https://formsubmit.co/biz@potrzebny.ai" method="POST">
-                <input type="hidden" name="_subject" value="Nowe zgłoszenie - Telebim Odrywołek">
-                <input type="hidden" name="_captcha" value="true">
-                <input type="hidden" name="_template" value="box">
-
+            <h2>📧 Zamów reklamę</h2>
+            <form action="https://formsubmit.co/biz@potrzebny.ai" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_subject" value="Nowe zgłoszenie - Telebim Odrzywołek">
+                
                 <label>Imię i nazwisko / Firma *</label>
                 <input type="text" name="name" required>
-
+                
                 <label>E-mail *</label>
                 <input type="email" name="email" required>
-
+                
                 <label>Telefon</label>
                 <input type="tel" name="phone">
-
+                
                 <label>Typ zgłoszenia *</label>
                 <select name="type" required>
                     <option value="">-- Wybierz opcję --</option>
-                    <option>Mam gotowe materiały do wyświetlenia</option>
-                    <option>Opis pomysłu - stwórzcie grafikę za mnie</option>
-                    <option>Potrzebuję pomocy z koncepcją</option>
+                    <option value="Grafika statyczna">Grafika statyczna</option>
+                    <option value="Film / Animacja">Film / Animacja</option>
+                    <option value="Mam własne materiały">Mam własne materiały</option>
+                    <option value="Chcę kreację AI">Chcę kreację AI</option>
                 </select>
-
+                
                 <label>Opis / Pomysł na reklamę *</label>
-                <textarea name="description" required></textarea>
-
+                <textarea name="message" required placeholder="Opisz swoją wizję reklamy lub co chcesz promować..."></textarea>
+                
                 <label>Preferowany czas emisji</label>
-                <select name="duration">
+                <select name="time">
                     <option value="">-- Wybierz okres --</option>
-                    <option>1 tydzień</option>
-                    <option>2 tygodnie</option>
-                    <option>1 miesiąc</option>
-                    <option>3 miesiące</option>
-                    <option>6 miesięcy</option>
-                    <option>Stała współpraca</option>
+                    <option value="Jak najszybciej">Jak najszybciej</option>
+                    <option value="W ciągu tygodnia">W ciągu tygodnia</option>
+                    <option value="W ciągu miesiąca">W ciągu miesiąca</option>
+                    <option value="Uzgodnimy później">Uzgodnimy później</option>
                 </select>
 
+                <label>Załącz pliki (grafiki, logo, zdjęcia)</label>
+                <div class="file-upload">
+                    <label for="file-input" style="cursor: pointer; display: block; color: #3498db; font-weight: 600;">📎 Kliknij aby dodać pliki</label>
+                    <input type="file" id="file-input" name="attachment" accept="image/*,.pdf,.zip" multiple>
+                    <div class="file-info">Możesz załączyć wiele plików (JPG, PNG, PDF, ZIP)</div>
+                </div>
+                
                 <button type="submit">🚀 Wyślij zgłoszenie</button>
             </form>
         </div>
 
         <footer>
-            <p>© 2025 Telebim Odrywołek | <strong>biz@potrzebny.ai</strong></p>
-            <p>Lokalizacja: Odrywołek, droga S7 (Belsk - Grójec)</p>
+            © 2025 Telebim Odrzywołek | biz@potrzebny.ai<br>
+            Lokalizacja: Odrzywołek, droga S7 (Belsk - Grójec)
         </footer>
     </div>
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const fileInfo = document.querySelector('.file-info');
+            const files = Array.from(e.target.files);
+            if(files.length > 0) {
+                fileInfo.innerHTML = `Wybrano: ${files.map(f => f.name).join(', ')}`;
+                fileInfo.style.color = '#2ecc71';
+            }
+        });
+    </script>
 </body>
 </html>
